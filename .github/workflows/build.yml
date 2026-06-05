@@ -20,8 +20,53 @@ jobs:
           mkdir -p "FNAF sl godot/en.lproj"
           mkdir -p "FNAF sl godot/Images.xcassets/AppIcon.appiconset"
           
+          # Create dummy source files for compiler satisfaction
           touch "FNAF sl godot/dummy.swift"
           touch "FNAF sl godot/dummy.h"
+
+          # Generate Info.plist
+          cat << 'EOF' > "FNAF sl godot/FNAF sl godot-Info.plist"
+          <?xml version="1.0" encoding="UTF-8"?>
+          <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+          <plist version="1.0">
+          <dict>
+              <key>CFBundleDevelopmentRegion</key>
+              <string>en</string>
+              <key>CFBundleDisplayName</key>
+              <string>FNAF SL</string>
+              <key>CFBundleExecutable</key>
+              <string>FNAF sl godot</string>
+              <key>CFBundleIdentifier</key>
+              <string>com.godot.fnafsl</string>
+              <key>CFBundleInfoDictionaryVersion</key>
+              <string>6.0</string>
+              <key>CFBundleName</key>
+              <string>FNAF sl godot</string>
+              <key>CFBundlePackageType</key>
+              <string>APPL</string>
+              <key>CFBundleShortVersionString</key>
+              <string>1.0</string>
+              <key>CFBundleVersion</key>
+              <string>1.0</string>
+              <key>LSRequiresIPhoneOS</key>
+              <true/>
+              <key>UIApplicationSupportsIndirectInputEvents</key>
+              <true/>
+              <key>UILaunchStoryboardName</key>
+              <string>Launch Screen</string>
+              <key>UIRequiredDeviceCapabilities</key>
+              <array>
+                  <string>arm64</string>
+              </array>
+              <key>UISupportedInterfaceOrientations</key>
+              <array>
+                  <string>UIInterfaceOrientationPortrait</string>
+                  <string>UIInterfaceOrientationLandscapeLeft</string>
+                  <string>UIInterfaceOrientationLandscapeRight</string>
+              </array>
+          </dict>
+          </plist>
+          EOF
 
           cat << 'EOF' > "FNAF sl godot/FNAF sl godot.entitlements"
           <?xml version="1.0" encoding="UTF-8"?>
