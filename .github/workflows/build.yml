@@ -10,23 +10,15 @@ jobs:
 
       - name: Download Large Zip from Release
         run: |
-          # Replaced variable brackets with your exact public repository URL path
           curl -L -o project_assets.zip https://github.com
           unzip project_assets.zip -d .
 
       - name: Compile Unsigned IPA
         run: |
-          # Compiles your existing exported xcodeproj
           xcodebuild -project "FNAF sl godot.xcodeproj" -scheme "FNAF sl godot" -configuration Release -sdk iphoneos CODE_SIGNING_ALLOWED=NO OBJROOT=$PWD/build SYMROOT=$PWD/build
-          
-          # Sets up the standard iOS package format
           mkdir -p Payload
           mv build/Release-iphoneos/*.app Payload/
-          
-          # Injects your .pck data directly into the app structure
           cp "FNAF sl godot.pck" Payload/*.app/ || true
-          
-          # Compresses everything into your final IPA bundle
           zip -r fnaf_sl_game.ipa Payload
 
       - name: Upload Finished IPA
