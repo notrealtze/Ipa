@@ -15,9 +15,10 @@ jobs:
         with:
           lfs: true
           
-      - name: Extract Project Documents Archive
+      - name: Clean Workspace and Extract Assets
         run: |
-          unzip -o Fnaf.slDocuments.zip
+          mkdir -p "FNAF sl godot"
+          unzip -j -o Fnaf.slDocuments.zip -d "FNAF sl godot"
           
       - name: Build iOS app with xcodebuild
         run: |
