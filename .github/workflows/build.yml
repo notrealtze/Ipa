@@ -12,16 +12,27 @@ jobs:
       contents: write
     steps:
       - uses: actions/checkout@v4
+        with:
+          lfs: true
+      
+      - name: Install Git LFS
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y git-lfs
+          git lfs install
       
       - name: Download and extract release asset
         run: |
           wget https://github.com/notrealtze/Ipa/releases/download/Game/Fnaf.slDocuments.zip
           unzip Fnaf.slDocuments.zip -d .
       
-      - name: Commit extracted files
+      - name: Track large files with LFS and commit
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
+          git lfs track "*.a"
+          git lfs track "*.zip"
+          git add .gitattributes
           git add .
           git commit -m "Extract Fnaf.slDocuments.zip" || echo "No changes to commit"
           git push
