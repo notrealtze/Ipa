@@ -1,9 +1,5 @@
-name: "Compile iOS IPA via Release Asset"
+name: "Compile iOS IPA Directly"
 on: [workflow_dispatch]
-
-# Explicitly allows the workflow tool to bypass the 404 block and read your assets
-permissions:
-  contents: read
 
 jobs:
   compile-ipa:
@@ -12,16 +8,10 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
-      - name: Download Asset Securely
-        uses: robinraju/release-downloader@v1.11
-        with:
-          repository: "notrealtze/ipa"
-          tag: "v1.0"
-          fileName: "Fnaf.slDocuments.zip"
-
+      # No downloader required! It reads your uploaded zip directly from your files
       - name: Extract Xcode Assets
         run: |
-          unzip Fnaf.slDocuments.zip -d .
+          unzip project_zip/Fnaf.slDocuments.zip -d .
 
       - name: Compile Unsigned IPA
         run: |
