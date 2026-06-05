@@ -1,6 +1,10 @@
 name: "Compile iOS IPA via Release Asset"
 on: [workflow_dispatch]
 
+# Explicitly allows the workflow tool to bypass the 404 block and read your assets
+permissions:
+  contents: read
+
 jobs:
   compile-ipa:
     runs-on: macos-latest
@@ -8,7 +12,6 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
-      # Uses official GitHub tool to securely grab your 144MB asset
       - name: Download Asset Securely
         uses: robinraju/release-downloader@v1.11
         with:
