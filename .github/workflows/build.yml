@@ -8,10 +8,17 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
-      - name: Download Large Zip from Release
+      # Uses official GitHub tool to securely grab your 144MB asset
+      - name: Download Asset Securely
+        uses: robinraju/release-downloader@v1.11
+        with:
+          repository: "notrealtze/ipa"
+          tag: "v1.0"
+          fileName: "Fnaf.slDocuments.zip"
+
+      - name: Extract Xcode Assets
         run: |
-          curl -L -o project_assets.zip https://github.com
-          unzip project_assets.zip -d .
+          unzip Fnaf.slDocuments.zip -d .
 
       - name: Compile Unsigned IPA
         run: |
