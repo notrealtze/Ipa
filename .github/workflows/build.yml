@@ -8,10 +8,10 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
-      # No downloader required! It reads your uploaded zip directly from your files
+      # Removed the folder prefix so it finds the zip sitting in your main branch
       - name: Extract Xcode Assets
         run: |
-          unzip project_zip/Fnaf.slDocuments.zip -d .
+          unzip Fnaf.slDocuments.zip -d .
 
       - name: Compile Unsigned IPA
         run: |
