@@ -15,13 +15,70 @@ jobs:
         with:
           lfs: true
           
-      - name: Clean Workspace and Extract Assets
+      - name: Generate Missing Godot Folders
         run: |
-          unzip -o Fnaf.slDocuments.zip
-          if [ -d "Fnaf slDocuments" ]; then
-            cp -R "Fnaf slDocuments/"* .
-            rm -rf "Fnaf slDocuments"
-          fi
+          mkdir -p "FNAF sl godot/en.lproj"
+          mkdir -p "FNAF sl godot/Images.xcassets/AppIcon.appiconset"
+          
+          cat << 'EOF' > "FNAF sl godot/FNAF sl godot.entitlements"
+          <?xml version="1.0" encoding="UTF-8"?>
+          <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+          <plist version="1.0">
+          <dict/>
+          </plist>
+          EOF
+          
+          cat << 'EOF' > "FNAF sl godot/en.lproj/InfoPlist.strings"
+          "CFBundleDisplayName" = "FNAF SL";
+          "CFBundleName" = "FNAF SL";
+          EOF
+          
+          cat << 'EOF' > "FNAF sl godot/Launch Screen.storyboard"
+          <?xml version="1.0" encoding="UTF-8"?>
+          <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="15705" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" launchScreen="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="01J-lp-oVM">
+              <device id="retina6_1" orientation="portrait" appearance="light"/>
+              <dependencies>
+                  <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15706"/>
+                  <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+                  <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+              </dependencies>
+              <scenes>
+                  <scene sceneID="EHf-IW-A2E">
+                      <objects>
+                          <viewController id="01J-lp-oVM" sceneMemberID="viewController">
+                              <view key="view" contentMode="scaleToFill" id="Ze5-6b-2t3">
+                                  <rect key="x" y="0" width="414" height="896"/>
+                                  <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                  <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                  <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
+                              </view>
+                          </viewController>
+                          <placeholder placeholderIdentifier="IBFirstResponder" id="iYj-Kq-Ea1" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                      </objects>
+                      <point key="canvasLocation" x="53" y="375"/>
+                  </scene>
+              </scenes>
+          </document>
+          EOF
+          
+          echo "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=" | base64 --decode > "FNAF sl godot/Images.xcassets/AppIcon.appiconset/icon.png"
+          
+          cat << 'EOF' > "FNAF sl godot/Images.xcassets/AppIcon.appiconset/Contents.json"
+          {
+            "images" : [
+              {
+                "filename" : "icon.png",
+                "idiom" : "universal",
+                "size" : "1024x1024",
+                "scale" : "1x"
+              }
+            ],
+            "info" : {
+              "version" : 1,
+              "author" : "xcode"
+            }
+          }
+          EOF
           
       - name: Build iOS app with xcodebuild
         run: |
@@ -37,13 +94,13 @@ jobs:
             PROVISIONING_PROFILE_SPECIFIER="" \
             CODE_SIGN_ENTITLEMENTS="" \
             clean build
-      
+            
       - name: Create IPA
         run: |
           mkdir -p Payload
           cp -r build/Build/Products/Release-iphoneos/*.app Payload/
           zip -r "FNAF_sl_godot.ipa" Payload/
-      
+          
       - name: Upload IPA to Release
         uses: softprops/action-gh-release@v2
         with:
