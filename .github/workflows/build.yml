@@ -1,4 +1,4 @@
-name: Extract Release Assets
+name: Build and Sign iOS IPA
 
 on:
   push:
@@ -6,8 +6,8 @@ on:
   workflow_dispatch:
 
 jobs:
-  extract:
-    runs-on: ubuntu-latest
+  build:
+    runs-on: macos-latest
     permissions:
       contents: write
     steps:
@@ -15,24 +15,31 @@ jobs:
         with:
           lfs: true
       
-      - name: Install Git LFS
+      - name: Build iOS app with xcodebuild
         run: |
-          sudo apt-get update
-          sudo apt-get install -y git-lfs
-          git lfs install
+          xcodebuild -project "FNAF sl godot.xcodeproj" \
+            -scheme "FNAF sl godot" \
+            -configuration Release \
+            -sdk iphoneos \
+            -derivedDataPath build \
+            CODE_SIGNING_ALLOWED=NO \
+            CODE_SIGNING_REQUIRED=NO \
+            CODE_SIGN_IDENTITY="" \
+            PROVISIONING_PROFILE_SPECIFIER="" \
+            clean build
       
-      - name: Download and extract release asset
+      - name: Create IPA
         run: |
-          wget https://github.com/notrealtze/Ipa/releases/download/Game/Fnaf.slDocuments.zip
-          unzip Fnaf.slDocuments.zip -d .
+          mkdir -p Payload
+          cp -r build/Build/Products/Release-iphoneos/*.app Payload/
+          zip -r "FNAF_sl_godot.ipa" Payload/
       
-      - name: Track large files with LFS and commit
-        run: |
-          git config --local user.email "action@github.com"
-          git config --local user.name "GitHub Action"
-          git lfs track "*.a"
-          git lfs track "*.zip"
-          git add .gitattributes
-          git add .
-          git commit -m "Extract Fnaf.slDocuments.zip" || echo "No changes to commit"
-          git push
+      - name: Upload IPA to Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: FNAF_sl_godot.ipa
+          tag_name: latest-build
+          name: "FNAF SL Godot Build"
+          make_latest: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
