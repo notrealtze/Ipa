@@ -10,8 +10,8 @@ jobs:
 
       - name: Download Large Zip from Release
         run: |
-          # Automatically pulls the 112MB file from your v1.0 release asset block
-          curl -L -o project_assets.zip https://github.com{{ github.repository }}/releases/download/v1.0/Fnaf%20slDocuments.zip
+          # Updated to match your exact file name from the screenshot
+          curl -L -o project_assets.zip https://github.com{{ github.repository }}/releases/download/v1.0/Fnaf.slDocuments.zip
           unzip project_assets.zip -d .
 
       - name: Compile Unsigned IPA
